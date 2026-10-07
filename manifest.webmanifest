@@ -1,0 +1,14 @@
+{
+  "name":"Visita Técnica Ferrostaal",
+  "short_name":"Visita Técnica",
+  "id":"./",
+  "scope":"./",
+  "start_url":"./index.html",
+  "display":"standalone",
+  "orientation":"portrait-primary",
+  "background_color":"#ffffff",
+  "theme_color":"#0f4b63",
+  "lang":"es-CL",
+  "description":"Registro móvil de visitas técnicas, fotografías, anomalías, firmas y generación de informe PDF.",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
