@@ -71,7 +71,7 @@ $("#f").addEventListener("input",deb(()=>save(true),500));$("#f").addEventListen
 $$("[data-photo]").forEach(i=>i.onchange=async()=>{for(const file of [...i.files])await put({id:crypto.randomUUID(),section:i.dataset.photo,caption:"",data:await compress(file),t:Date.now()});i.value="";await render(i.dataset.photo)});
 $$(".clr").forEach(b=>b.onclick=()=>{let c=$("#"+b.dataset.c);c.getContext("2d").clearRect(0,0,c.width,c.height);c.dataset.s="0";saveSig()})
 }
-function ui(){$$(".panel").forEach(p=>p.classList.toggle("on",+p.dataset.p===step));$$(".steps button").forEach(b=>b.classList.toggle("on",+b.dataset.step===step));$("#steptext").textContent="Paso "+step+" de 6;$("#prev").disabled=step===1;$("#next").textContent=step===6?"Generar PDF":"Siguiente →";scrollTo(0,0)}
+function ui(){$$(".panel").forEach(p=>p.classList.toggle("on",+p.dataset.p===step));$$(".steps button").forEach(b=>b.classList.toggle("on",+b.dataset.step===step));$("#steptext").textContent="Paso "+step+" de 6";$("#prev").disabled=step===1;$("#next").textContent=step===6?"Generar PDF":"Siguiente →";scrollTo(0,0)}
 function data(){let o={};new FormData($("#f")).forEach((v,k)=>o[k]=v);return o}
 function save(silent=false){localStorage.setItem(FK,JSON.stringify(data()));saveA();saveSig();if(!silent){$("#state").textContent="Guardado en este dispositivo.";setTimeout(()=>$("#state").textContent="Borrador guardado automáticamente.",1300)}}
 function load(){try{let o=JSON.parse(localStorage.getItem(FK)||"{}");Object.entries(o).forEach(([k,v])=>{let e=document.querySelector('[name="'+k+'"]');if(e)e.value=v})}catch(e){}}
