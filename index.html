@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f4b63">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Visita Técnica Ferrostaal</title>
+<style>
+:root{--b:#0f4b63;--b2:#28789f;--l:#e8f2f8;--g:#d6e0e6;--t:#17212b}
+*{box-sizing:border-box}body{margin:0;background:#eef3f6;color:var(--t);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:115px 1fr 80px;align-items:center;gap:8px;background:#fff;padding:9px 12px;border-bottom:1px solid var(--g)}
+.brand{font-size:25px;font-weight:800;color:#243c85}.brand i{color:#158bc0;font-style:normal}.client{font-size:13px;text-align:right;font-weight:800;color:#777}.head{text-align:center;color:var(--b)}.head b{display:block}.head small{color:#6b7983}
+main{max-width:900px;margin:auto;padding:10px 10px 90px}.card{background:#fff;border:1px solid var(--g);border-radius:10px;padding:12px;margin:10px 0}.title{background:var(--b);color:white;font-weight:800;text-align:center;padding:8px;border-radius:5px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700}
+input,select,textarea{width:100%;padding:10px;border:1px solid #b8c8d2;border-radius:7px;font:inherit;background:#fff}textarea{min-height:155px;resize:vertical;line-height:1.35}
+.steps{display:grid;grid-template-columns:repeat(6,minmax(78px,1fr));gap:5px;overflow:auto;margin:8px 0}.steps button{border:1px solid var(--g);background:#fff;border-radius:8px;padding:8px;font-size:11px;font-weight:800;color:#667}.steps button.on{background:var(--b);color:white}
+.panel{display:none}.panel.on{display:block}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:8px;padding:11px 14px;font-weight:800;background:var(--l);color:var(--b)}.primary{background:var(--b);color:#fff}.secondary{background:var(--b2);color:#fff}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.photo{border:1px solid var(--g);padding:6px;border-radius:8px;position:relative}.photo img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px}.photo textarea{min-height:55px;margin-top:5px;font-size:12px}.photo button{position:absolute;right:8px;top:8px;border:0;border-radius:50%;width:30px;height:30px;background:#000b;color:#fff}
+.anom{display:grid;grid-template-columns:34px 1fr 120px 30px;gap:6px;align-items:center;border-bottom:1px solid #edf1f3;padding:7px 0}.sol{display:flex;gap:7px;justify-content:center}.sol label{display:flex;flex-direction:row;align-items:center;font-size:11px}.sol input{width:auto}
+.siggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sig{width:100%;height:170px;border:1px dashed #8ca2af;border-radius:8px;touch-action:none;background:white}.bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--g);padding:9px;display:flex;justify-content:space-between;align-items:center}
+#print{display:none}
+@media(max-width:620px){header{grid-template-columns:95px 1fr 55px}.brand{font-size:20px}.head small{display:none}.grid,.siggrid{grid-template-columns:1fr}.full{grid-column:auto}.photos{grid-template-columns:1fr 1fr}.anom{grid-template-columns:28px 1fr 92px 26px}.sol{flex-direction:column}}
+@page{size:A4;margin:11mm}
+@media print{body{background:#fff}header,main,.bottom{display:none!important}#print{display:block}.page{page-break-after:always}.page:last-child{page-break-after:auto}.rh{display:grid;grid-template-columns:120px 1fr 75px;align-items:center;margin-bottom:8px}.rh .brand{font-size:20px}.rh h3{text-align:center;margin:0;font-size:13px;text-decoration:underline}.rt{background:var(--b)!important;color:#fff!important;text-align:center;font-weight:800;padding:5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tbl{width:100%;border-collapse:collapse;font-size:10px}.tbl th,.tbl td{border:1px solid #aab7c0;padding:5px;vertical-align:top}.tbl th{background:#dceaf4!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.txt{border:1px solid #bcc8cf;padding:8px;white-space:pre-wrap;font-size:10px;min-height:70px;line-height:1.35}.rphotos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.rphoto{border:1px solid #c2ccd2;padding:5px;break-inside:avoid}.rphoto img{width:100%;max-height:220px;object-fit:contain}.rphoto div{font-size:9px}.rsig{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:12px}.rsig>div{border:1px solid #bcc8cf;text-align:center;padding:8px}.rsig img{height:75px;max-width:100%;object-fit:contain}.foot{text-align:center;font-size:8px;color:#687983;margin-top:8px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><i>●●</i> ferrostaal</div><div class="head"><b>VISITA TÉCNICA DE SERVICIO</b><small>Registro en terreno y reporte PDF</small></div><div class="client">SERVICIO<br>TÉCNICO</div></header>
+<main>
+<div class="card toolbar"><button class="btn" id="new">Nuevo informe</button><button class="btn secondary" id="save">Guardar</button><button class="btn primary" id="pdf">Generar PDF</button><small id="state">Borrador listo.</small></div>
+<div class="steps" id="steps"><button type="button" data-step="1" class="on">1. Datos</button><button type="button" data-step="2" class="">2. Antecedentes</button><button type="button" data-step="3" class="">3. Trabajo</button><button type="button" data-step="4" class="">4. Evaluación</button><button type="button" data-step="5" class="">5. Anomalías</button><button type="button" data-step="6" class="">6. Cierre</button></div>
+<form id="f">
+<section class="panel on" data-p="1"><div class="title">1. Datos del servicio</div><div class="card grid">
+<label class="full">Descripción del trabajo<textarea name="workTitle" rows="2"></textarea></label>
+<label>Fecha<input type="date" name="date"></label><label>Ciudad<input name="city"></label>
+<label>Técnico de servicio<input name="technician"></label><label>N° de servicio<input name="serviceNo"></label>
+<label>Obra / Faena<input name="site"></label><label>Empresa<input name="company"></label>
+<label>Equipo<input name="equipment"></label><label>N° de serie del equipo<input name="equipmentSerial"></label>
+<label>N° de serie del motor<input name="engineSerial"></label><label>Código interno<input name="internalCode"></label>
+<label>Estado<select name="initialStatus"><option></option><option>Operativo</option><option>Operativo con observaciones</option><option>Fuera de servicio</option><option>Pendiente de diagnóstico</option></select></label>
+<label>Horómetro<input type="number" step=".1" name="hourmeter"></label>
+</div></section>
+
+<section class="panel" data-p="2"><div class="title">2. Antecedentes</div><div class="card"><textarea name="background" rows="13" placeholder="Información previa entregada por el cliente, condición inicial del equipo, fallas reportadas e intervenciones anteriores."></textarea><div class="toolbar"><label class="btn">📷 Agregar fotografías<input hidden type="file" accept="image/*" capture="environment" multiple data-photo="background"></label></div><div class="photos" data-grid="background"></div></div></section><section class="panel" data-p="3"><div class="title">3. Descripción del trabajo</div><div class="card"><textarea name="work" rows="13" placeholder="Describa inspecciones, pruebas, reparaciones, ajustes y trabajos ejecutados."></textarea><div class="toolbar"><label class="btn">📷 Agregar fotografías<input hidden type="file" accept="image/*" capture="environment" multiple data-photo="work"></label></div><div class="photos" data-grid="work"></div></div></section><section class="panel" data-p="4"><div class="title">4. Evaluación de anomalías</div><div class="card"><textarea name="evaluation" rows="13" placeholder="Registre hallazgos, códigos de falla, mediciones, diagnóstico y causa determinada."></textarea><div class="toolbar"><label class="btn">📷 Agregar fotografías<input hidden type="file" accept="image/*" capture="environment" multiple data-photo="evaluation"></label></div><div class="photos" data-grid="evaluation"></div></div></section>
+
+<section class="panel" data-p="5"><div class="title">5. Registro de anomalías</div><div class="card"><div id="alist"></div><button type="button" class="btn" id="add">＋ Agregar anomalía</button></div></section>
+
+<section class="panel" data-p="6"><div class="title">6. Recomendaciones y cierre</div><div class="card">
+<label>Recomendaciones<textarea name="recommendations" rows="9"></textarea></label>
+<div class="toolbar"><label class="btn">📷 Agregar fotografías<input hidden type="file" accept="image/*" capture="environment" multiple data-photo="recommendations"></label></div><div class="photos" data-grid="recommendations"></div>
+<label>Estado final<select name="finalStatus"><option></option><option>Operativo</option><option>Operativo con observaciones</option><option>Fuera de servicio</option><option>Pendiente de reparación</option><option>Pendiente de repuesto</option><option>Pendiente de pruebas</option></select></label>
+<label>Observaciones finales<textarea name="finalNotes" rows="5"></textarea></label></div>
+<div class="title">Firmas de conformidad</div><div class="siggrid">
+<div class="card"><label>Técnico de servicio<input name="techSignName"></label><canvas id="ts" class="sig"></canvas><button type="button" class="btn clr" data-c="ts">Limpiar firma</button></div>
+<div class="card"><label>Representante del cliente<input name="clientSignName"></label><canvas id="cs" class="sig"></canvas><button type="button" class="btn clr" data-c="cs">Limpiar firma</button></div>
+</div></section>
+</form>
+</main>
+<div class="bottom"><button class="btn" id="prev">← Anterior</button><span id="steptext">Paso 1 de 6</span><button class="btn primary" id="next">Siguiente →</button></div>
+<section id="print"></section>
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const FK="vt_form",AK="vt_anom",SK="vt_sig",DBN="vt_photos";let step=1,db;
+document.addEventListener("DOMContentLoaded",async()=>{db=await openDB();load();loadA();await renderAll();initSig();bind();if(!$('[name=date]').value)$('[name=date]').value=new Date().toISOString().slice(0,10);if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{})});
+function bind(){
+$("#steps").onclick=e=>{let b=e.target.closest("button");if(b){step=+b.dataset.step;ui()}};
+$("#prev").onclick=()=>{if(step>1){step--;ui()}};$("#next").onclick=()=>{if(step<6){step++;ui()}else printReport()};
+$("#save").onclick=save;$("#pdf").onclick=printReport;$("#new").onclick=resetAll;$("#add").onclick=()=>addA();
+$("#f").addEventListener("input",deb(()=>save(true),500));$("#f").addEventListener("change",()=>save(true));
+$$("[data-photo]").forEach(i=>i.onchange=async()=>{for(const file of [...i.files])await put({id:crypto.randomUUID(),section:i.dataset.photo,caption:"",data:await compress(file),t:Date.now()});i.value="";await render(i.dataset.photo)});
+$$(".clr").forEach(b=>b.onclick=()=>{let c=$("#"+b.dataset.c);c.getContext("2d").clearRect(0,0,c.width,c.height);c.dataset.s="0";saveSig()})
+}
+function ui(){$$(".panel").forEach(p=>p.classList.toggle("on",+p.dataset.p===step));$$(".steps button").forEach(b=>b.classList.toggle("on",+b.dataset.step===step));$("#steptext").textContent="Paso "+step+" de 6;$("#prev").disabled=step===1;$("#next").textContent=step===6?"Generar PDF":"Siguiente →";scrollTo(0,0)}
+function data(){let o={};new FormData($("#f")).forEach((v,k)=>o[k]=v);return o}
+function save(silent=false){localStorage.setItem(FK,JSON.stringify(data()));saveA();saveSig();if(!silent){$("#state").textContent="Guardado en este dispositivo.";setTimeout(()=>$("#state").textContent="Borrador guardado automáticamente.",1300)}}
+function load(){try{let o=JSON.parse(localStorage.getItem(FK)||"{}");Object.entries(o).forEach(([k,v])=>{let e=document.querySelector('[name="'+k+'"]');if(e)e.value=v})}catch(e){}}
+function addA(a={d:"",s:""}){let r=document.createElement("div");r.className="anom";let id=crypto.randomUUID();r.innerHTML='<b></b><input class="ad" placeholder="Anomalía / hallazgo"><div class="sol"><label><input type="radio" name="s'+id+'" value="SI"> Sí</label><label><input type="radio" name="s'+id+'" value="NO"> No</label></div><button type="button" class="btn">✕</button>';$(".ad",r).value=a.d||"";$$("input[type=radio]",r).forEach(x=>{x.checked=x.value===a.s;x.onchange=saveA});$(".ad",r).oninput=deb(saveA,300);$("button",r).onclick=()=>{r.remove();ren();saveA()};$("#alist").append(r);ren()}
+function ren(){$$(".anom").forEach((r,i)=>$("b",r).textContent=i+1)}
+function anoms(){return $$(".anom").map(r=>({d:$(".ad",r).value.trim(),s:($("input:checked",r)||{}).value||""})).filter(x=>x.d||x.s)}
+function saveA(){localStorage.setItem(AK,JSON.stringify(anoms()))}
+function loadA(){let a=[];try{a=JSON.parse(localStorage.getItem(AK)||"[]")}catch(e){};(a.length?a:Array.from({length:7},()=>({}))).forEach(addA)}
+function openDB(){return new Promise((res,rej)=>{let q=indexedDB.open(DBN,1);q.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains("p"))d.createObjectStore("p",{keyPath:"id"})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+function all(){return new Promise((res,rej)=>{let q=db.transaction("p").objectStore("p").getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}
+function put(x){return new Promise((res,rej)=>{let t=db.transaction("p","readwrite");t.objectStore("p").put(x);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function del(id){return new Promise((res,rej)=>{let t=db.transaction("p","readwrite");t.objectStore("p").delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function clearP(){return new Promise((res,rej)=>{let t=db.transaction("p","readwrite");t.objectStore("p").clear();t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+async function compress(file){let img=await new Promise((res,rej)=>{let i=new Image;i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)}),m=1500,k=Math.min(1,m/img.width),c=document.createElement("canvas");c.width=img.width*k;c.height=img.height*k;c.getContext("2d").drawImage(img,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.76)}
+async function renderAll(){for(const s of ["background","work","evaluation","recommendations"])await render(s)}
+async function render(s){let g=document.querySelector('[data-grid="'+s+'"]'),ps=(await all()).filter(x=>x.section===s).sort((a,b)=>a.t-b.t);g.innerHTML="";ps.forEach(p=>{let d=document.createElement("div");d.className="photo";d.innerHTML='<button type="button">✕</button><img><textarea placeholder="Descripción / referencia"></textarea>';$("img",d).src=p.data;$("textarea",d).value=p.caption;$("textarea",d).oninput=deb(async e=>{p.caption=e.target.value;await put(p)},300);$("button",d).onclick=async()=>{await del(p.id);render(s)};g.append(d)})}
+function initSig(){["ts","cs"].forEach(id=>{let c=$("#"+id),r=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=r.width*ratio;c.height=170*ratio;let x=c.getContext("2d");x.scale(ratio,ratio);x.lineWidth=2;x.lineCap="round";let draw=false,pos=e=>{let b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};c.onpointerdown=e=>{draw=true;let p=pos(e);x.beginPath();x.moveTo(p.x,p.y)};c.onpointermove=e=>{if(!draw)return;let p=pos(e);x.lineTo(p.x,p.y);x.stroke();c.dataset.s="1"};addEventListener("pointerup",()=>{if(draw){draw=false;saveSig()}})});loadSig()}
+function saveSig(){let o={};["ts","cs"].forEach(id=>{let c=$("#"+id);o[id]=c.dataset.s==="1"?c.toDataURL():""});localStorage.setItem(SK,JSON.stringify(o))}
+function loadSig(){let o={};try{o=JSON.parse(localStorage.getItem(SK)||"{}")}catch(e){};Object.entries(o).forEach(([id,u])=>{if(!u)return;let c=$("#"+id),i=new Image;i.onload=()=>{let r=c.getBoundingClientRect();c.getContext("2d").drawImage(i,0,0,r.width,170);c.dataset.s="1"};i.src=u})}
+async function resetAll(){if(!confirm("¿Crear un informe nuevo? Se borrará el borrador guardado."))return;localStorage.removeItem(FK);localStorage.removeItem(AK);localStorage.removeItem(SK);await clearP();location.reload()}
+function esc(v=""){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[s]))}
+function br(v=""){return esc(v).replace(/\n/g,"<br>")}function fd(v){if(!v)return"";let[y,m,d]=v.split("-");return d+"-"+m+"-"+y}
+function head(){return '<div class="rh"><div class="brand"><i>●●</i> ferrostaal</div><h3>INFORME TÉCNICO DE SERVICIO</h3><div class="client">SERVICIO<br>TÉCNICO</div></div>'}
+function photos(ps){if(!ps.length)return"";return '<div class="rphotos">'+ps.sort((a,b)=>a.t-b.t).map((p,i)=>'<div class="rphoto"><img src="'+p.data+'"><div><b>Foto '+(i+1)+':</b> '+esc(p.caption||"Registro fotográfico")+"</div></div>").join("")+"</div>"}
+function page(title,body,n){return '<div class="page">'+head()+'<div class="rt">'+title+"</div>"+body+'<div class="foot">Informe Técnico de Servicio · Página '+n+"</div></div>"}
+async function printReport(){save(true);let d=data(),ps=await all(),a=anoms(),sg={};try{sg=JSON.parse(localStorage.getItem(SK)||"{}")}catch(e){};let out="";
+out+=page("1. IDENTIFICACIÓN DEL SERVICIO",'<table class="tbl"><tr><th>Descripción del trabajo</th><td colspan="3">'+esc(d.workTitle)+'</td></tr>'+pr("Fecha",fd(d.date),"Ciudad",d.city)+pr("Técnico de servicio",d.technician,"N° de servicio",d.serviceNo)+pr("Obra / Faena",d.site,"Empresa",d.company)+pr("Equipo",d.equipment,"N° serie equipo",d.equipmentSerial)+pr("N° serie motor",d.engineSerial,"Código interno",d.internalCode)+pr("Estado inicial",d.initialStatus,"Horómetro",d.hourmeter)+"</table>",1);
+out+=page("2. ANTECEDENTES",'<div class="txt">'+br(d.background)+"</div>"+photos(ps.filter(x=>x.section==="background")),2);
+out+=page("3. DESCRIPCIÓN DEL TRABAJO",'<div class="txt">'+br(d.work)+"</div>"+photos(ps.filter(x=>x.section==="work")),3);
+out+=page("4. EVALUACIÓN DE ANOMALÍAS",'<div class="txt">'+br(d.evaluation)+"</div>"+photos(ps.filter(x=>x.section==="evaluation")),4);
+let rows=a.length?a.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.d)+'</td><td>'+(x.s==="SI"?"X":"")+'</td><td>'+(x.s==="NO"?"X":"")+"</td></tr>").join(""):'<tr><td colspan="4">Sin registros</td></tr>';
+out+=page("5. ANOMALÍAS IDENTIFICADAS",'<table class="tbl"><tr><th>N°</th><th>Descripción</th><th>Sí</th><th>No</th></tr>'+rows+'</table><div class="rt">6. RECOMENDACIONES</div><div class="txt">'+br(d.recommendations)+"</div>"+photos(ps.filter(x=>x.section==="recommendations"))+'<table class="tbl"><tr><th>Estado final</th><td>'+esc(d.finalStatus)+'</td></tr><tr><th>Observaciones finales</th><td>'+br(d.finalNotes)+'</td></tr></table><div class="rt">7. FIRMAS DE CONFORMIDAD</div><div class="rsig">'+sig(sg.ts,d.techSignName,"Técnico de servicio")+sig(sg.cs,d.clientSignName,"Representante del cliente")+"</div>",5);
+$("#print").innerHTML=out;setTimeout(()=>print(),150)}
+function pr(a,b,c,d){return '<tr><th>'+a+"</th><td>"+esc(b)+'</td><th>'+c+"</th><td>"+esc(d)+"</td></tr>"}function sig(u,n,r){return '<div>'+(u?'<img src="'+u+'">':'<div style="height:75px"></div>')+"<b>"+esc(n)+"</b><br><small>"+r+"</small></div>"}function deb(fn,m=300){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),m)}}
+</script>
+</body></html>
