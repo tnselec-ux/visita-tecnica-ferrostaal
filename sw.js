@@ -1,5 +1,5 @@
-const C='vt-ferrostaal-v2';
-const A=['./','./index.html','./manifest.webmanifest','./icon.svg'];
+const C='vt-ferrostaal-v3';
+const A=['./','./index.html','./manifest.webmanifest','./icon.svg','./seguimiento.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(C).then(c=>c.addAll(A)));
   self.skipWaiting();
