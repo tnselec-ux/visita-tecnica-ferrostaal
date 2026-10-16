@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f4b63">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Seguimiento Operacional Ferrostaal</title>
+<style>
+:root{--b:#0f4b63;--b2:#28789f;--l:#e8f2f8;--g:#d6e0e6;--t:#17212b;--ok:#157347}
+*{box-sizing:border-box}body{margin:0;background:#eef3f6;color:var(--t);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:115px 1fr 80px;align-items:center;gap:8px;background:#fff;padding:9px 12px;border-bottom:1px solid var(--g)}
+.brand{font-size:25px;font-weight:800;color:#243c85}.brand i{color:#158bc0;font-style:normal}.client{font-size:12px;text-align:right;font-weight:800;color:#777}.head{text-align:center;color:var(--b)}.head b{display:block}.head small{color:#6b7983}
+main{max-width:980px;margin:auto;padding:10px 10px 95px}.card{background:#fff;border:1px solid var(--g);border-radius:10px;padding:12px;margin:10px 0}.title{background:var(--b);color:white;font-weight:800;text-align:center;padding:8px;border-radius:5px;margin:10px 0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:8px;padding:11px 14px;font-weight:800;background:var(--l);color:var(--b);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:42px}.primary{background:var(--b);color:#fff}.secondary{background:var(--b2);color:#fff}.danger{background:#f9e5e5;color:#9c2e2e}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700}
+input,select,textarea{width:100%;padding:10px;border:1px solid #b8c8d2;border-radius:7px;font:inherit;background:#fff}textarea{resize:vertical;line-height:1.35}
+.help{font-size:12px;color:#667781;margin:5px 0 10px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.scale div{background:#f7fafc;border:1px solid var(--g);padding:8px 5px;text-align:center;border-radius:7px;font-size:11px}.scale b{display:block;font-size:16px;color:var(--b);margin-bottom:3px}
+.eval-head,.eval-row{display:grid;grid-template-columns:34px 130px 1.5fr 92px 1.4fr;gap:6px;align-items:center}.eval-head{font-size:11px;font-weight:800;background:var(--l);padding:8px;border-radius:6px}.eval-row{padding:7px 0;border-bottom:1px solid #edf1f3}.eval-row .n{text-align:center;font-weight:800}.eval-row .cat{font-size:12px;font-weight:700}.eval-row .point{font-size:12px}.rating{padding:8px 5px}.obs{min-height:48px;font-size:12px}
+.metric{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.metric>div{background:#f7fafc;border:1px solid var(--g);border-radius:8px;padding:10px;text-align:center}.metric b{font-size:22px;color:var(--b);display:block}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.photo{border:1px solid var(--g);padding:6px;border-radius:8px;position:relative;background:#fff}.photo img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px}.photo textarea{min-height:55px;margin-top:5px;font-size:12px}.photo button{position:absolute;right:8px;top:8px;border:0;border-radius:50%;width:30px;height:30px;background:#000b;color:#fff}
+.siggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sig{width:100%;height:170px;border:1px dashed #8ca2af;border-radius:8px;touch-action:none;background:white}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--g);padding:9px max(9px,env(safe-area-inset-right)) max(9px,env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left));display:flex;justify-content:space-between;gap:8px;z-index:20}
+#print{display:none}
+@media(max-width:720px){header{grid-template-columns:95px 1fr 55px}.brand{font-size:20px}.head small{display:none}.grid,.siggrid,.metric{grid-template-columns:1fr}.full{grid-column:auto}.scale{grid-template-columns:1fr}.eval-head{display:none}.eval-row{grid-template-columns:28px 1fr;gap:6px;border:1px solid var(--g);border-radius:8px;padding:8px;margin:8px 0}.eval-row .n{grid-row:1/5}.eval-row .cat,.eval-row .point,.eval-row .rating,.eval-row .obs{grid-column:2}.photos{grid-template-columns:1fr 1fr}}
+@page{size:A4;margin:10mm}
+@media print{
+body{background:#fff}header,main,.bottom{display:none!important}#print{display:block}.page{page-break-after:always}.page:last-child{page-break-after:auto}
+.rh{display:grid;grid-template-columns:120px 1fr 85px;align-items:center;margin-bottom:7px}.rh .brand{font-size:20px}.rh h3{text-align:center;margin:0;font-size:13px;text-decoration:underline}.rt{background:var(--b)!important;color:#fff!important;text-align:center;font-weight:800;padding:5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tbl{width:100%;border-collapse:collapse;font-size:9.5px;margin-bottom:8px}.tbl th,.tbl td{border:1px solid #aab7c0;padding:4px;vertical-align:top}.tbl th{background:#dceaf4!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.txt{border:1px solid #bcc8cf;padding:7px;white-space:pre-wrap;font-size:9.5px;min-height:65px;line-height:1.3}
+.rphotos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.rphoto{border:1px solid #c2ccd2;padding:5px;break-inside:avoid}.rphoto img{width:100%;max-height:220px;object-fit:contain}.rphoto div{font-size:8.5px}.rsig{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:12px}.rsig>div{border:1px solid #bcc8cf;text-align:center;padding:7px}.rsig img{height:70px;max-width:100%;object-fit:contain}.foot{text-align:center;font-size:8px;color:#687983;margin-top:8px}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><i>●●</i> ferrostaal</div>
+<div class="head"><b>REGISTRO DE SEGUIMIENTO OPERACIONAL</b><small>Capacitación, seguimiento y reinstrucción</small></div>
+<div class="client">FORMATO<br>DE TERRENO</div>
+</header>
+
+<main>
+<div class="card toolbar">
+<a class="btn" href="index.html">← Informe técnico</a>
+<button class="btn secondary" id="save">Guardar</button>
+<button class="btn primary" id="pdf">Generar PDF</button>
+<button class="btn danger" id="new">Nuevo registro</button>
+<small id="state">Borrador listo.</small>
+</div>
+
+<form id="f">
+<div class="title">1. Identificación del seguimiento</div>
+<div class="card grid">
+<label>N° de registro<input name="registerNo" placeholder="Ej.: SO-2026-001"></label>
+<label>Fecha<input type="date" name="date"></label>
+<label>Hora inicio<input type="time" name="startTime"></label>
+<label>Hora término<input type="time" name="endTime"></label>
+<label>Empresa / Cliente<input name="clientCompany"></label>
+<label>Obra / Faena<input name="site"></label>
+<label>Equipo / Modelo<input name="equipment"></label>
+<label>Código interno<input name="internalCode"></label>
+<label>Técnico observador<input name="observer"></label>
+<label>Tipo de actividad<select name="activityType"><option></option><option>Capacitación</option><option>Seguimiento</option><option>Reinstrucción</option></select></label>
+<label>Duración observación<input name="duration" placeholder="Ej.: 1 h 30 min"></label>
+<label>Turno / Jornada<input name="shift"></label>
+</div>
+
+<div class="title">2. Datos del personal observado</div>
+<div class="card grid">
+<label>Nombre completo<input name="operatorName"></label>
+<label>RUT<input name="rut" placeholder="12.345.678-9"></label>
+<label>Cargo / Función<input name="role"></label>
+<label>Empresa<input name="operatorCompany"></label>
+<label>Experiencia en equipo<input name="experience" placeholder="Ej.: 2 años"></label>
+<label>Equipo habitual<input name="usualEquipment"></label>
+</div>
+
+<div class="title">3. Evaluación de conductas operacionales</div>
+<div class="card">
+<div class="scale">
+<div><b>0</b>No observado</div><div><b>1</b>Deficiente / Riesgo</div><div><b>2</b>Requiere mejora</div><div><b>3</b>Correcto</div><div><b>4</b>Correcto y consistente</div>
+</div>
+<p class="help">La ponderación promedio considera solo los puntos efectivamente observados (1 a 4).</p>
+<div class="eval-head"><span>N°</span><span>Categoría</span><span>Punto observado</span><span>0–4</span><span>Observación / evidencia</span></div>
+<div id="evalList"></div>
+<div class="metric">
+<div><span>Ponderación promedio</span><b id="avg">—</b><small>/ 4</small></div>
+<div><span>Puntos observados</span><b id="observed">0</b><small>de 12</small></div>
+<div><span>Calidad referencial</span><b id="quality">—</b><small>según promedio</small></div>
+</div>
+</div>
+
+<div class="title">4. Observaciones relevantes en terreno</div>
+<div class="card"><textarea name="fieldObservations" rows="9" placeholder="Registre conductas, condiciones, fortalezas, desviaciones y antecedentes relevantes observados durante la operación."></textarea></div>
+
+<div class="title">5. Acciones de refuerzo / compromisos</div>
+<div class="card"><textarea name="reinforcement" rows="7" placeholder="Refuerzos entregados, correcciones indicadas, compromisos del operador y puntos a verificar en el próximo seguimiento."></textarea></div>
+
+<div class="title">6. Resultado del seguimiento</div>
+<div class="card grid">
+<label>Resultado<select name="result"><option></option><option>Operación correcta</option><option>Correcta con observación</option><option>Requiere seguimiento</option><option>Requiere reinstrucción</option></select></label>
+<label>Próximo seguimiento<input type="date" name="nextFollowup"></label>
+</div>
+
+<div class="title">7. Registro fotográfico</div>
+<div class="card">
+<div class="toolbar"><label class="btn">📷 Agregar fotografías<input hidden type="file" accept="image/*" capture="environment" multiple id="photoInput"></label></div>
+<div class="photos" id="photoGrid"></div>
+</div>
+
+<div class="title">8. Conformidad</div>
+<div class="siggrid">
+<div class="card">
+<label>Personal observado<input name="operatorSignName" placeholder="Nombre"></label>
+<canvas id="operatorSig" class="sig"></canvas>
+<button type="button" class="btn clearSig" data-target="operatorSig">Limpiar firma</button>
+</div>
+<div class="card">
+<label>Técnico observador<input name="observerSignName" placeholder="Nombre"></label>
+<canvas id="observerSig" class="sig"></canvas>
+<button type="button" class="btn clearSig" data-target="observerSig">Limpiar firma</button>
+</div>
+</div>
+</form>
+</main>
+
+<div class="bottom"><a class="btn" href="index.html">← Servicio</a><button class="btn primary" id="pdfBottom">Generar PDF</button></div>
+<section id="print"></section>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const FK='so_form_v1', EK='so_eval_v1', SK='so_sig_v1', DBN='so_photos_v1'; let db;
+const criteria=[
+['Preparación','Checklist e inspección previa del equipo'],
+['Seguridad','Control del entorno y reconocimiento de riesgos'],
+['Traslado','Dimensionamiento del equipo y maniobras seguras'],
+['Posicionamiento','Ubicación y estabilidad antes de iniciar acuñadura'],
+['Brazo','Posicionamiento y control del brazo / cajas de trabajo'],
+['Ataque','Ángulo de ataque y contacto correcto con la roca'],
+['Percusión','Uso controlado de percusión y evita percusión en vacío'],
+['Telescópico','Uso correcto del brazo telescópico sin generar esfuerzos innecesarios'],
+['Pala / apoyo','Uso correcto de pala de empuje o apoyos según condición'],
+['Cuidado equipo','Evita golpes, palanca excesiva y exposición innecesaria de componentes'],
+['Control operación','Coordinación de mandos y fluidez operacional'],
+['Cierre tarea','Retiro seguro, revisión de condición y comunicación de anomalías']
+];
+
+document.addEventListener('DOMContentLoaded',async()=>{
+ renderCriteria(); loadForm(); loadEval(); db=await openDB(); await renderPhotos(); initSig(); bind();
+ if(!$('[name=date]').value)$('[name=date]').value=new Date().toISOString().slice(0,10);
+ if(!$('[name=observerSignName]').value && $('[name=observer]').value)$('[name=observerSignName]').value=$('[name=observer]').value;
+ calc();
+});
+
+function bind(){
+ $('#save').onclick=()=>save(false); $('#pdf').onclick=printReport; $('#pdfBottom').onclick=printReport; $('#new').onclick=resetAll;
+ $('#f').addEventListener('input',deb(()=>save(true),450)); $('#f').addEventListener('change',()=>{save(true);calc()});
+ $('#photoInput').onchange=async e=>{for(const file of [...e.target.files])await putPhoto({id:crypto.randomUUID(),caption:'',data:await compress(file),t:Date.now()});e.target.value='';await renderPhotos()};
+ $$('.clearSig').forEach(b=>b.onclick=()=>{const c=$('#'+b.dataset.target);c.getContext('2d').clearRect(0,0,c.width,c.height);c.dataset.s='0';saveSig()});
+ $('[name=observer]').addEventListener('change',()=>{if(!$('[name=observerSignName]').value)$('[name=observerSignName]').value=$('[name=observer]').value});
+ $('[name=operatorName]').addEventListener('change',()=>{if(!$('[name=operatorSignName]').value)$('[name=operatorSignName]').value=$('[name=operatorName]').value});
+}
+function renderCriteria(){
+ const box=$('#evalList');box.innerHTML='';
+ criteria.forEach((c,i)=>{const r=document.createElement('div');r.className='eval-row';r.dataset.i=i;r.innerHTML='<span class="n">'+(i+1)+'</span><span class="cat">'+c[0]+'</span><span class="point">'+c[1]+'</span><select class="rating"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select><textarea class="obs" placeholder="Observación / evidencia"></textarea>';box.append(r)});
+ $$('.rating,.obs').forEach(x=>x.addEventListener('input',deb(()=>{saveEval();calc()},250)));
+}
+function getEval(){return $$('.eval-row').map(r=>({rating:+$('.rating',r).value,obs:$('.obs',r).value.trim()}))}
+function saveEval(){localStorage.setItem(EK,JSON.stringify(getEval()))}
+function loadEval(){let a=[];try{a=JSON.parse(localStorage.getItem(EK)||'[]')}catch(e){};$$('.eval-row').forEach((r,i)=>{if(a[i]){$('.rating',r).value=String(a[i].rating??0);$('.obs',r).value=a[i].obs||''}})}
+function calc(){
+ const vals=getEval().map(x=>x.rating).filter(x=>x>0),avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+ $('#avg').textContent=avg===null?'—':avg.toFixed(2);$('#observed').textContent=vals.length;
+ let q='—';if(avg!==null){if(avg>=3.5)q='Alta';else if(avg>=2.75)q='Adecuada';else if(avg>=2)q='En mejora';else q='Crítica'}$('#quality').textContent=q;
+}
+function formData(){let o={};new FormData($('#f')).forEach((v,k)=>o[k]=v);return o}
+function save(silent=true){localStorage.setItem(FK,JSON.stringify(formData()));saveEval();saveSig();if(!silent){$('#state').textContent='Guardado en este dispositivo.';setTimeout(()=>$('#state').textContent='Borrador guardado automáticamente.',1300)}}
+function loadForm(){try{const o=JSON.parse(localStorage.getItem(FK)||'{}');Object.entries(o).forEach(([k,v])=>{const e=document.querySelector('[name="'+k+'"]');if(e)e.value=v})}catch(e){}}
+function openDB(){return new Promise((res,rej)=>{const q=indexedDB.open(DBN,1);q.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('p'))d.createObjectStore('p',{keyPath:'id'})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+function allPhotos(){return new Promise((res,rej)=>{const q=db.transaction('p').objectStore('p').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}
+function putPhoto(x){return new Promise((res,rej)=>{const t=db.transaction('p','readwrite');t.objectStore('p').put(x);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function delPhoto(id){return new Promise((res,rej)=>{const t=db.transaction('p','readwrite');t.objectStore('p').delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function clearPhotos(){return new Promise((res,rej)=>{const t=db.transaction('p','readwrite');t.objectStore('p').clear();t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+async function compress(file){const img=await new Promise((res,rej)=>{const i=new Image;i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)}),max=1500,k=Math.min(1,max/img.width),c=document.createElement('canvas');c.width=img.width*k;c.height=img.height*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.76)}
+async function renderPhotos(){const g=$('#photoGrid'),ps=(await allPhotos()).sort((a,b)=>a.t-b.t);g.innerHTML='';ps.forEach((p,i)=>{const d=document.createElement('div');d.className='photo';d.innerHTML='<button type="button">✕</button><img><textarea placeholder="Foto '+(i+1)+' - Condición / conducta observada"></textarea>';$('img',d).src=p.data;$('textarea',d).value=p.caption||'';$('textarea',d).oninput=deb(async e=>{p.caption=e.target.value;await putPhoto(p)},300);$('button',d).onclick=async()=>{await delPhoto(p.id);renderPhotos()};g.append(d)})}
+function initSig(){['operatorSig','observerSig'].forEach(id=>{const c=$('#'+id),r=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=r.width*ratio;c.height=170*ratio;const x=c.getContext('2d');x.scale(ratio,ratio);x.lineWidth=2;x.lineCap='round';let draw=false;const pos=e=>{const b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};c.onpointerdown=e=>{e.preventDefault();draw=true;const p=pos(e);x.beginPath();x.moveTo(p.x,p.y)};c.onpointermove=e=>{if(!draw)return;e.preventDefault();const p=pos(e);x.lineTo(p.x,p.y);x.stroke();c.dataset.s='1'};addEventListener('pointerup',()=>{if(draw){draw=false;saveSig()}})});loadSig()}
+function saveSig(){const o={};['operatorSig','observerSig'].forEach(id=>{const c=$('#'+id);o[id]=c.dataset.s==='1'?c.toDataURL():''});localStorage.setItem(SK,JSON.stringify(o))}
+function loadSig(){let o={};try{o=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){};Object.entries(o).forEach(([id,u])=>{if(!u)return;const c=$('#'+id),i=new Image;i.onload=()=>{const r=c.getBoundingClientRect();c.getContext('2d').drawImage(i,0,0,r.width,170);c.dataset.s='1'};i.src=u})}
+async function resetAll(){if(!confirm('¿Crear un seguimiento nuevo? Se borrará el borrador actual.'))return;localStorage.removeItem(FK);localStorage.removeItem(EK);localStorage.removeItem(SK);await clearPhotos();location.reload()}
+function esc(v=''){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function br(v=''){return esc(v).replace(/\n/g,'<br>')}function fd(v){if(!v)return'';const[y,m,d]=v.split('-');return d+'-'+m+'-'+y}
+function rh(){return '<div class="rh"><div class="brand"><i>●●</i> ferrostaal</div><h3>REGISTRO DE SEGUIMIENTO OPERACIONAL</h3><div class="client">FORMATO<br>DE TERRENO</div></div>'}
+function page(title,body,n){return '<div class="page">'+rh()+'<div class="rt">'+title+'</div>'+body+'<div class="foot">Seguimiento Operacional · Registro para análisis y mejora continua · Página '+n+'</div></div>'}
+function pair(a,b,c,d){return '<tr><th>'+a+'</th><td>'+esc(b)+'</td><th>'+c+'</th><td>'+esc(d)+'</td></tr>'}
+function rphotos(ps){if(!ps.length)return'';return '<div class="rphotos">'+ps.sort((a,b)=>a.t-b.t).map((p,i)=>'<div class="rphoto"><img src="'+p.data+'"><div><b>Foto '+(i+1)+':</b> '+esc(p.caption||'Condición / conducta observada')+'</div></div>').join('')+'</div>'}
+function sig(u,n,r){return '<div>'+(u?'<img src="'+u+'">':'<div style="height:70px"></div>')+'<b>'+esc(n||'')+'</b><br><small>'+r+'</small></div>'}
+async function printReport(){
+ save(true);const d=formData(),ev=getEval(),ps=await allPhotos();let sg={};try{sg=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){}
+ const vals=ev.map(x=>x.rating).filter(x=>x>0),avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+ let rows=ev.map((x,i)=>'<tr><td style="text-align:center">'+(i+1)+'</td><td><b>'+criteria[i][0]+'</b></td><td>'+criteria[i][1]+'</td><td style="text-align:center">'+x.rating+'</td><td>'+esc(x.obs)+'</td></tr>').join('');
+ let out='';
+ out+=page('1. IDENTIFICACIÓN DEL SEGUIMIENTO','<table class="tbl">'+pair('N° de registro',d.registerNo,'Fecha',fd(d.date))+pair('Hora inicio',d.startTime,'Hora término',d.endTime)+pair('Empresa / Cliente',d.clientCompany,'Obra / Faena',d.site)+pair('Equipo / Modelo',d.equipment,'Código interno',d.internalCode)+pair('Técnico observador',d.observer,'Tipo de actividad',d.activityType)+pair('Duración observación',d.duration,'Turno / Jornada',d.shift)+'</table><div class="rt">2. DATOS DEL PERSONAL OBSERVADO</div><table class="tbl">'+pair('Nombre completo',d.operatorName,'RUT',d.rut)+pair('Cargo / Función',d.role,'Empresa',d.operatorCompany)+pair('Experiencia en equipo',d.experience,'Equipo habitual',d.usualEquipment)+'</table>',1);
+ out+=page('3. EVALUACIÓN DE CONDUCTAS OPERACIONALES','<table class="tbl"><tr><th>N°</th><th>Categoría</th><th>Punto observado</th><th>0-4</th><th>Observación / evidencia</th></tr>'+rows+'</table><table class="tbl"><tr><th>Ponderación promedio</th><td>'+(avg===null?'—':avg.toFixed(2)+' / 4')+'</td><th>Puntos observados</th><td>'+vals.length+' / 12</td></tr></table>',2);
+ out+=page('4. OBSERVACIONES RELEVANTES EN TERRENO','<div class="txt">'+br(d.fieldObservations)+'</div><div class="rt">5. ACCIONES DE REFUERZO / COMPROMISOS</div><div class="txt">'+br(d.reinforcement)+'</div><div class="rt">6. RESULTADO DEL SEGUIMIENTO</div><table class="tbl">'+pair('Resultado',d.result,'Próximo seguimiento',fd(d.nextFollowup))+'</table><div class="rt">7. REGISTRO FOTOGRÁFICO</div>'+rphotos(ps)+'<div class="rt">8. CONFORMIDAD</div><div class="rsig">'+sig(sg.operatorSig,d.operatorSignName,'Personal observado')+sig(sg.observerSig,d.observerSignName,'Técnico observador')+'</div>',3);
+ $('#print').innerHTML=out;setTimeout(()=>window.print(),180)
+}
+function deb(fn,m=300){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),m)}}
+</script>
+</body>
+</html>
