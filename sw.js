@@ -1,4 +1,4 @@
-const C='vt-ferrostaal-v3';
+const C='vt-ferrostaal-v4';
 const A=['./','./index.html','./manifest.webmanifest','./icon.svg','./seguimiento.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(C).then(c=>c.addAll(A)));
@@ -15,9 +15,9 @@ self.addEventListener('fetch',e=>{
     e.respondWith(
       fetch(e.request).then(r=>{
         const copy=r.clone();
-        caches.open(C).then(c=>c.put('./index.html',copy));
+        caches.open(C).then(c=>c.put(e.request,copy));
         return r;
-      }).catch(()=>caches.match('./index.html'))
+      }).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html')))
     );
     return;
   }
