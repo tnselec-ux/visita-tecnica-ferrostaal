@@ -52,8 +52,8 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #b8c8d2;border-ra
 <label>Estado final<select name="finalStatus"><option></option><option>Operativo</option><option>Operativo con observaciones</option><option>Fuera de servicio</option><option>Pendiente de reparación</option><option>Pendiente de repuesto</option><option>Pendiente de pruebas</option></select></label>
 <label>Observaciones finales<textarea name="finalNotes" rows="5"></textarea></label></div>
 <div class="title">Firmas de conformidad</div><div class="siggrid">
-<div class="card"><label>Técnico de servicio<input name="techSignName"></label><canvas id="ts" class="sig"></canvas><button type="button" class="btn clr" data-c="ts">Limpiar firma</button></div>
-<div class="card"><label>Representante del cliente<input name="clientSignName"></label><canvas id="cs" class="sig"></canvas><button type="button" class="btn clr" data-c="cs">Limpiar firma</button></div>
+<div class="card"><label>Técnico de servicio<input name="techSignName" placeholder="Nombre"></label><canvas id="ts" class="sig"></canvas><button type="button" class="btn clr" data-c="ts">Limpiar firma</button></div>
+<div class="card"><label>Representante del cliente<input name="clientSignName" placeholder="Nombre"></label><canvas id="cs" class="sig"></canvas><button type="button" class="btn clr" data-c="cs">Limpiar firma</button></div>
 </div></section>
 </form>
 </main>
@@ -61,17 +61,17 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #b8c8d2;border-ra
 <section id="print"></section>
 <script>
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const FK="vt_form",AK="vt_anom",SK="vt_sig",DBN="vt_photos";let step=1,db;
-document.addEventListener("DOMContentLoaded",async()=>{db=await openDB();load();loadA();await renderAll();initSig();bind();if(!$('[name=date]').value)$('[name=date]').value=new Date().toISOString().slice(0,10);if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{})});
+const FK="vt_form",AK="vt_anom",SK="vt_sig",DBN="vt_photos";let step=1,db,sigReady=false;
+document.addEventListener("DOMContentLoaded",async()=>{db=await openDB();load();loadA();await renderAll();bind();if(!$('[name=date]').value)$('[name=date]').value=new Date().toISOString().slice(0,10);if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{})});
 function bind(){
 $("#steps").onclick=e=>{let b=e.target.closest("button");if(b){step=+b.dataset.step;ui()}};
 $("#prev").onclick=()=>{if(step>1){step--;ui()}};$("#next").onclick=()=>{if(step<6){step++;ui()}else printReport()};
 $("#save").onclick=save;$("#pdf").onclick=printReport;$("#new").onclick=resetAll;$("#add").onclick=()=>addA();
 $("#f").addEventListener("input",deb(()=>save(true),500));$("#f").addEventListener("change",()=>save(true));
 $$("[data-photo]").forEach(i=>i.onchange=async()=>{for(const file of [...i.files])await put({id:crypto.randomUUID(),section:i.dataset.photo,caption:"",data:await compress(file),t:Date.now()});i.value="";await render(i.dataset.photo)});
-$$(".clr").forEach(b=>b.onclick=()=>{let c=$("#"+b.dataset.c);c.getContext("2d").clearRect(0,0,c.width,c.height);c.dataset.s="0";saveSig()})
+$(".clr").forEach(b=>b.onclick=()=>{let c=$("#"+b.dataset.c);c.getContext("2d").clearRect(0,0,c.width,c.height);c.dataset.s="0";saveSig()});$("[name=technician]").addEventListener("change",()=>{if(!$("[name=techSignName]").value)$("[name=techSignName]").value=$("[name=technician]").value})
 }
-function ui(){$$(".panel").forEach(p=>p.classList.toggle("on",+p.dataset.p===step));$$(".steps button").forEach(b=>b.classList.toggle("on",+b.dataset.step===step));$("#steptext").textContent="Paso "+step+" de 6";$("#prev").disabled=step===1;$("#next").textContent=step===6?"Generar PDF":"Siguiente →";scrollTo(0,0)}
+function ui(){$(".panel").forEach(p=>p.classList.toggle("on",+p.dataset.p===step));$(".steps button").forEach(b=>b.classList.toggle("on",+b.dataset.step===step));$("#steptext").textContent="Paso "+step+" de 6";$("#prev").disabled=step===1;$("#next").textContent=step===6?"Generar PDF":"Siguiente →";if(step===6&&!sigReady)setTimeout(initSig,60);scrollTo(0,0)}
 function data(){let o={};new FormData($("#f")).forEach((v,k)=>o[k]=v);return o}
 function save(silent=false){localStorage.setItem(FK,JSON.stringify(data()));saveA();saveSig();if(!silent){$("#state").textContent="Guardado en este dispositivo.";setTimeout(()=>$("#state").textContent="Borrador guardado automáticamente.",1300)}}
 function load(){try{let o=JSON.parse(localStorage.getItem(FK)||"{}");Object.entries(o).forEach(([k,v])=>{let e=document.querySelector('[name="'+k+'"]');if(e)e.value=v})}catch(e){}}
@@ -88,7 +88,7 @@ function clearP(){return new Promise((res,rej)=>{let t=db.transaction("p","readw
 async function compress(file){let img=await new Promise((res,rej)=>{let i=new Image;i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)}),m=1500,k=Math.min(1,m/img.width),c=document.createElement("canvas");c.width=img.width*k;c.height=img.height*k;c.getContext("2d").drawImage(img,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.76)}
 async function renderAll(){for(const s of ["background","work","evaluation","recommendations"])await render(s)}
 async function render(s){let g=document.querySelector('[data-grid="'+s+'"]'),ps=(await all()).filter(x=>x.section===s).sort((a,b)=>a.t-b.t);g.innerHTML="";ps.forEach(p=>{let d=document.createElement("div");d.className="photo";d.innerHTML='<button type="button">✕</button><img><textarea placeholder="Descripción / referencia"></textarea>';$("img",d).src=p.data;$("textarea",d).value=p.caption;$("textarea",d).oninput=deb(async e=>{p.caption=e.target.value;await put(p)},300);$("button",d).onclick=async()=>{await del(p.id);render(s)};g.append(d)})}
-function initSig(){["ts","cs"].forEach(id=>{let c=$("#"+id),r=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=r.width*ratio;c.height=170*ratio;let x=c.getContext("2d");x.scale(ratio,ratio);x.lineWidth=2;x.lineCap="round";let draw=false,pos=e=>{let b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};c.onpointerdown=e=>{draw=true;let p=pos(e);x.beginPath();x.moveTo(p.x,p.y)};c.onpointermove=e=>{if(!draw)return;let p=pos(e);x.lineTo(p.x,p.y);x.stroke();c.dataset.s="1"};addEventListener("pointerup",()=>{if(draw){draw=false;saveSig()}})});loadSig()}
+function initSig(){if(sigReady)return;let canvases=["ts","cs"].map(id=>$("#"+id));if(canvases.some(c=>!c||c.getBoundingClientRect().width<10))return;canvases.forEach(c=>{let r=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=Math.round(r.width*ratio);c.height=Math.round(170*ratio);let x=c.getContext("2d");x.setTransform(ratio,0,0,ratio,0,0);x.lineWidth=2;x.lineCap="round";x.strokeStyle="#111";let draw=false,pos=e=>{let b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};c.onpointerdown=e=>{e.preventDefault();draw=true;let p=pos(e);x.beginPath();x.moveTo(p.x,p.y)};c.onpointermove=e=>{if(!draw)return;e.preventDefault();let p=pos(e);x.lineTo(p.x,p.y);x.stroke();c.dataset.s="1"};c.onpointerup=c.onpointercancel=c.onpointerleave=()=>{if(draw){draw=false;saveSig()}}});sigReady=true;loadSig()}
 function saveSig(){let o={};["ts","cs"].forEach(id=>{let c=$("#"+id);o[id]=c.dataset.s==="1"?c.toDataURL():""});localStorage.setItem(SK,JSON.stringify(o))}
 function loadSig(){let o={};try{o=JSON.parse(localStorage.getItem(SK)||"{}")}catch(e){};Object.entries(o).forEach(([id,u])=>{if(!u)return;let c=$("#"+id),i=new Image;i.onload=()=>{let r=c.getBoundingClientRect();c.getContext("2d").drawImage(i,0,0,r.width,170);c.dataset.s="1"};i.src=u})}
 async function resetAll(){if(!confirm("¿Crear un informe nuevo? Se borrará el borrador guardado."))return;localStorage.removeItem(FK);localStorage.removeItem(AK);localStorage.removeItem(SK);await clearP();location.reload()}
